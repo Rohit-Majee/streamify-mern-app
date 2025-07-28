@@ -1,12 +1,6 @@
 import { Link, useLocation } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
-import {
-  BellIcon,
-  Headphones,
-  HomeIcon,
-  ShipWheelIcon,
-  UsersIcon,
-} from "lucide-react";
+import { BellIcon, Headphones, HomeIcon, UsersIcon } from "lucide-react";
 
 const Sidebar = () => {
   const { authUser } = useAuthUser();
@@ -24,26 +18,32 @@ const Sidebar = () => {
         </Link>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1">
-        <Link
-          to="/"
-          className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
-            currentPath === "/" ? "btn-active" : ""
-          }`}
-        >
-          <HomeIcon className="size-5 text-base-content opacity-70" />
-          <span>Home</span>
-        </Link>
-
-        <Link
-          to="/notifications"
-          className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
-            currentPath === "/notifications" ? "btn-active" : ""
-          }`}
-        >
-          <BellIcon className="size-5 text-base-content opacity-70" />
-          <span>Notifications</span>
-        </Link>
+      
+      <nav className="flex-1 px-2 py-4 space-y-2">
+        {[
+          { to: "/", icon: HomeIcon, label: "Home" },
+          { to: "/notifications", icon: BellIcon, label: "Notifications" },
+        ].map(({ to, icon: Icon, label }) => {
+          const isActive = currentPath === to;
+          return (
+            <Link
+              key={to}
+              to={to}
+              aria-current={isActive ? "page" : undefined}
+              className={`
+          flex items-center gap-3 px-4 py-2 rounded-lg text-base transition-colors
+          ${
+            isActive
+              ? "bg-primary text-primary-content font-semibold"
+              : "text-base-content hover:bg-base-100 hover:text-base-content"
+          }
+        `}
+            >
+              <Icon className="h-5 w-5 opacity-70" />
+              <span className="flex-1 truncate">{label}</span>
+            </Link>
+          );
+        })}
       </nav>
 
       {/* USER PROFILE SECTION */}
@@ -66,4 +66,5 @@ const Sidebar = () => {
     </aside>
   );
 };
+
 export default Sidebar;

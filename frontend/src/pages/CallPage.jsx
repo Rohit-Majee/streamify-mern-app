@@ -16,12 +16,12 @@ import {
 } from "@stream-io/video-react-sdk";
 
 import "@stream-io/video-react-sdk/dist/css/styles.css";
-import toast from "react-hot-toast";
 import PageLoader from "../components/PageLoader";
+// import CallContent from "../components/CallContent";
 
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 
-const CallPage = () => {
+function CallPage() {
   const { id: callId } = useParams();
   const [client, setClient] = useState(null);
   const [call, setCall] = useState(null);
@@ -40,8 +40,6 @@ const CallPage = () => {
       if (!tokenData.token || !authUser || !callId) return;
 
       try {
-        console.log("Initializing Stream video client...");
-
         const user = {
           id: authUser._id,
           name: authUser.fullName,
@@ -58,8 +56,6 @@ const CallPage = () => {
 
         await callInstance.join({ create: true });
 
-        console.log("Joined call successfully");
-
         setClient(videoClient);
         setCall(callInstance);
       } catch (error) {
@@ -72,28 +68,28 @@ const CallPage = () => {
 
     initCall();
   }, [tokenData, authUser, callId]);
-
   if (isLoading || isConnecting) return <PageLoader />;
 
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <div className="relative">
         {client && call ? (
-          <StreamVideo client={client}>
-            <StreamCall call={call}>
-              <CallContent />
-            </StreamCall>
-          </StreamVideo>
+          <>
+            <StreamVideo client={client}>
+              <StreamCall call={call}>
+                <CallContent />
+              </StreamCall>
+            </StreamVideo>
+          </>
         ) : (
           <div className="flex items-center justify-center h-full">
-            <p>Could not initialize call. Please refresh or try again later.</p>
+            <p>Could not initialize call. Please refresh or try again.</p>
           </div>
         )}
       </div>
     </div>
   );
-};
-
+}
 const CallContent = () => {
   const { useCallCallingState } = useCallStateHooks();
   const callingState = useCallCallingState();

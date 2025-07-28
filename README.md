@@ -1,1 +1,0 @@
-# streamify-mern-app

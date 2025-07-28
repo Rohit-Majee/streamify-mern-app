@@ -1,19 +1,14 @@
-import { Link, useLocation } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
+import { Link, useLocation } from "react-router";
 import { BellIcon, Headphones, LogOutIcon } from "lucide-react";
 import ThemeSelector from "./ThemeSelector";
 import useLogout from "../hooks/useLogout";
 
 const Navbar = () => {
   const { authUser } = useAuthUser();
+
   const location = useLocation();
   const isChatPage = location.pathname?.startsWith("/chat");
-
-  // const queryClient = useQueryClient();
-  // const { mutate: logoutMutation } = useMutation({
-  //   mutationFn: logout,
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-  // });
 
   const { logoutMutation } = useLogout();
 
@@ -46,7 +41,11 @@ const Navbar = () => {
 
           <div className="avatar">
             <div className="w-9 rounded-full">
-              <img src={authUser?.profilePic} alt="User Avatar" rel="noreferrer" />
+              <img
+                src={authUser?.profilePic}
+                alt="User Avatar"
+                rel="noreferrer"
+              />
             </div>
           </div>
 
@@ -59,4 +58,5 @@ const Navbar = () => {
     </nav>
   );
 };
+
 export default Navbar;

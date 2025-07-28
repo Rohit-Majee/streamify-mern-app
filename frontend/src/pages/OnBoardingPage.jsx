@@ -1,19 +1,12 @@
 import { useState } from "react";
 import useAuthUser from "../hooks/useAuthUser";
+import { CameraIcon, GlobeIcon, MapPinIcon, ShuffleIcon } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import toast, { LoaderIcon } from "react-hot-toast";
 import { completeOnboarding } from "../lib/api";
-import {
-  CameraIcon,
-  Headphones,
-  LoaderIcon,
-  MapPinIcon,
-  ShipWheelIcon,
-  ShuffleIcon,
-} from "lucide-react";
-import { LANGUAGES } from "../constants";
+import { LANGUAGES } from "../constants/constant";
 
-const OnboardingPage = () => {
+function OnBoardingPage() {
   const { authUser } = useAuthUser();
   const queryClient = useQueryClient();
 
@@ -26,13 +19,12 @@ const OnboardingPage = () => {
     profilePic: authUser?.profilePic || "",
   });
 
-  const { mutate: onboardingMutation, isPending } = useMutation({
+  const { isPending, mutate: onBoardingMutation } = useMutation({
     mutationFn: completeOnboarding,
     onSuccess: () => {
       toast.success("Profile onboarded successfully");
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
-
     onError: (error) => {
       toast.error(error.response.data.message);
     },
@@ -40,11 +32,10 @@ const OnboardingPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    onboardingMutation(formState);
+    onBoardingMutation(formState);
   };
 
-  const handleRandomAvatar = () => {
+  const handleRandomAvatar = async () => {
     const idx = Math.floor(Math.random() * 100) + 1; // 1-100 included
     const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
 
@@ -81,8 +72,8 @@ const OnboardingPage = () => {
               {/* Generate Random Avatar BTN */}
               <div className="flex items-center gap-2">
                 <button
-                  type="button"
                   onClick={handleRandomAvatar}
+                  type="button"
                   className="btn btn-accent"
                 >
                   <ShuffleIcon className="size-4 mr-2" />
@@ -99,29 +90,33 @@ const OnboardingPage = () => {
               <input
                 type="text"
                 name="fullName"
+                className="input input-bordered w-full"
+                placeholder="Your full name"
                 value={formState.fullName}
                 onChange={(e) =>
                   setFormState({ ...formState, fullName: e.target.value })
                 }
-                className="input input-bordered w-full"
-                placeholder="Your full name"
               />
             </div>
 
             {/* BIO */}
-            <div className="form-control">
+            <div className="form-control w-full ">
               <label className="label">
                 <span className="label-text">Bio</span>
               </label>
               <textarea
                 name="bio"
+                className="textarea textarea-primary textarea-md h-24 resize-vertical w-full"
+                placeholder="Tell others about yourself and your language learning goals"
                 value={formState.bio}
                 onChange={(e) =>
                   setFormState({ ...formState, bio: e.target.value })
                 }
-                className="textarea textarea-bordered h-24"
-                placeholder="Tell others about yourself and your language learning goals"
               />
+
+              <span className="text-sm text-base-content/60 mt-1">
+                Max 200 characters
+              </span>
             </div>
 
             {/* LANGUAGES */}
@@ -184,15 +179,16 @@ const OnboardingPage = () => {
               </label>
               <div className="relative">
                 <MapPinIcon className="absolute top-1/2 transform -translate-y-1/2 left-3 size-5 text-base-content opacity-70" />
+
                 <input
                   type="text"
                   name="location"
+                  className="input input-bordered w-full pl-10"
+                  placeholder="City, Country"
                   value={formState.location}
                   onChange={(e) =>
                     setFormState({ ...formState, location: e.target.value })
                   }
-                  className="input input-bordered w-full pl-10"
-                  placeholder="City, Country"
                 />
               </div>
             </div>
@@ -201,17 +197,17 @@ const OnboardingPage = () => {
 
             <button
               className="btn btn-primary w-full"
-              disabled={isPending}
               type="submit"
+              disabled={isPending}
             >
               {!isPending ? (
                 <>
-                  <ShipWheelIcon className="size-5 mr-2" />
+                  <GlobeIcon className="size-5 mr-2" />
                   Complete Onboarding
                 </>
               ) : (
                 <>
-                  <LoaderIcon className="animate-spin size-5 mr-2" />
+                  <LoaderIcon className="size-5 mr-2 animate-spin" />
                   Onboarding...
                 </>
               )}
@@ -221,5 +217,6 @@ const OnboardingPage = () => {
       </div>
     </div>
   );
-};
-export default OnboardingPage;
+}
+
+export default OnBoardingPage;
