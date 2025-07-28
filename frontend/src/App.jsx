@@ -1,16 +1,19 @@
 import { Navigate, Route, Routes } from "react-router";
-import HomePage from "./pages/HomePage";
-import SignUpPage from "./pages/SignUpPage";
-import LoginPage from "./pages/LoginPage";
-import ChatPage from "./pages/ChatPage";
-import CallPage from "./pages/CallPage";
-import NotificationsPage from "./pages/NotificationsPage";
 import OnBoardingPage from "./pages/OnBoardingPage";
 import { Toaster } from "react-hot-toast";
 import PageLoader from "./components/PageLoader";
 import useAuthUser from "./hooks/useAuthUser.js";
 import Layout from "./components/Layout.jsx";
 import { useThemeStore } from "./store/useThemeStore.js";
+
+import { lazy } from "react";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
+const SignUpPage = lazy(() => import("./pages/SignUpPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const ChatPage = lazy(() => import("./pages/ChatPage"));
+const CallPage = lazy(() => import("./pages/CallPage"));
+const NotificationsPage = lazy(() => import("./pages/NotificationsPage"));
 
 const App = () => {
   const { isLoading, authUser } = useAuthUser();
