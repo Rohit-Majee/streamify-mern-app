@@ -15,5 +15,4 @@ const useLogout = () => {
 
   return { logoutMutation, isPending, error };
 };
-
 export default useLogout;
